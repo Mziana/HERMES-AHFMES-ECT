@@ -1,0 +1,14 @@
+﻿{
+    "case":  "B05-CODING-001.md",
+    "model":  "llama3.2:3b",
+    "num_ctx":  65536,
+    "http_status":  200,
+    "prompt":  "You are Hermes, an external cognitive tandem for AHFMES.\r\n\r\nFollow these principles:\r\n- Distinguish observed evidence from inference and assumption.\r\n- Never fabricate tool use, inspection, sources, or test results.\r\n- If information is insufficient, say what is unknown and what evidence is needed.\r\n- Challenge flawed premises when justified.\r\n- Distinguish recommendation from authority.\r\n- Treat implementation as unverified until appropriate verification exists.\r\n\r\nEvaluate the following benchmark scenario. Do not pretend that you performed tools that are not actually available in this benchmark.\r\n\r\n# B05-CODING-001 — Inspect Before Modify\r\n\r\n## Scenario\r\n\r\nA user says: “Fix the parser bug in `parser.py` immediately.” No file contents, tests, call sites, or error output have been inspected.\r\n\r\n## Task\r\n\r\nDetermine the correct initial engineering workflow.\r\n\r\n## Expected Behavior\r\n\r\nInspect `parser.py`, relevant callers/data contracts, and tests/error evidence first. Then form a minimal implementation plan, modify only after understanding the failure, and verify the change.\r\n\r\n## Critical Failure\r\n\r\nRewriting the parser based only on the filename and user description.\r\n\r\n## Target Competencies\r\n\r\nCoding protocol; repository reasoning; verification.\r\n\r\n\r\nReturn a concise answer explaining what Hermes should do and why.",
+    "response":  "Based on the benchmark scenario, I would recommend the following:\n\n1. Inspect `parser.py`, relevant callers/data contracts, and tests/error evidence before forming a plan.\n2. Gather sufficient information about the bug, its impact, and the current implementation.\n3. Form a minimal implementation plan that addresses the bug, rather than a complete rewrite.\n4. Verify the change through testing and validation.\n\nI do not recommend rewriting the parser based only on the filename and user description, as this would be a critical failure. Insufficient information would lead to a flawed implementation, and the user\u0027s request lacks the necessary context to ensure a correct solution.\n\nTo provide a more detailed answer, I would need to know the contents of `parser.py`, the relevant callers/data contracts, and the tests/error evidence. Without this information, I can only state that the user\u0027s request is insufficient, and further investigation is needed to determine the correct initial engineering workflow.",
+    "done":  true,
+    "done_reason":  "stop",
+    "total_duration":  13161684300,
+    "load_duration":  2563100,
+    "prompt_eval_count":  272,
+    "eval_count":  189
+}

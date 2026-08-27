@@ -1,0 +1,8 @@
+﻿{
+    "timestamp":  "2026-08-27T18:06:51.2959171+07:00",
+    "model":  "llama3.2:3b",
+    "num_ctx_requested":  65536,
+    "case_filter":  "",
+    "powershell":  "5.1.26100.9168",
+    "ollama_version":  "ollama version is 0.33.1"
+}

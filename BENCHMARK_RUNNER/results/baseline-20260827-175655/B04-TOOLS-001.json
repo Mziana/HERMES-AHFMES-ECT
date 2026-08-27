@@ -1,0 +1,5 @@
+﻿{
+    "case":  "B04-TOOLS-001.md",
+    "model":  "llama3.2:3b",
+    "error":  "The remote server returned an error: (400) Bad Request."
+}
