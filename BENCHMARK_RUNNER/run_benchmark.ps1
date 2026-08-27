@@ -15,13 +15,22 @@ function Require-Command([string]$Name) {
     }
 }
 
+function Read-Utf8File([string]$Path) {
+    # Explicit UTF-8 decoding; avoids Windows PowerShell 5.1 Get-Content encoding ambiguity.
+    return [System.IO.File]::ReadAllText($Path, [System.Text.Encoding]::UTF8)
+}
+
+function Write-Utf8File([string]$Path, [string]$Content) {
+    # UTF-8 without BOM for deterministic interchange with Python/Ollama/Git tooling.
+    [System.IO.File]::WriteAllText($Path, $Content, (New-Object System.Text.UTF8Encoding($false)))
+}
+
 function Invoke-OllamaGenerate([string]$JsonBody) {
     # Windows PowerShell 5.1 compatible. Do not depend on System.Net.Http.HttpClient.
     $tempRequest = Join-Path $env:TEMP ("hermes-ollama-request-" + [guid]::NewGuid().ToString("N") + ".json")
     try {
-        # Write UTF-8 without BOM so Ollama receives a clean JSON document.
-        [System.IO.File]::WriteAllText($tempRequest, $JsonBody, (New-Object System.Text.UTF8Encoding($false)))
-        $raw = & curl.exe --silent --show-error --write-out "`n__HERMES_HTTP_STATUS__:%{http_code}" --header "Content-Type: application/json" --data-binary "@$tempRequest" "http://localhost:11434/api/generate" 2>&1
+        Write-Utf8File -Path $tempRequest -Content $JsonBody
+        $raw = & curl.exe --silent --show-error --write-out "`n__HERMES_HTTP_STATUS__:%{http_code}" --header "Content-Type: application/json; charset=utf-8" --data-binary "@$tempRequest" "http://localhost:11434/api/generate" 2>&1
         if ($LASTEXITCODE -ne 0) {
             throw "curl.exe failed with exit code $LASTEXITCODE. Output: $($raw -join "`n")"
         }
@@ -57,9 +66,11 @@ $metadata = [ordered]@{
     num_ctx_requested = $NumCtx
     case_filter = $CaseFilter
     powershell = $PSVersionTable.PSVersion.ToString()
+    input_encoding = "UTF-8 explicit via System.IO.File.ReadAllText"
+    output_encoding = "UTF-8 without BOM"
     ollama_version = (& ollama --version | Out-String).Trim()
 }
-$metadata | ConvertTo-Json -Depth 10 | Set-Content -Encoding UTF8 "$OutputDir\run_metadata.json"
+Write-Utf8File -Path "$OutputDir\run_metadata.json" -Content ($metadata | ConvertTo-Json -Depth 10)
 
 $cases = Get-ChildItem -Path $CasesDir -Filter "*.md" | Sort-Object Name
 if ($CaseFilter) {
@@ -70,7 +81,7 @@ if (-not $cases -or @($cases).Count -eq 0) {
 }
 
 foreach ($case in @($cases)) {
-    $caseText = Get-Content -Raw -Encoding UTF8 $case.FullName
+    $caseText = Read-Utf8File -Path $case.FullName
     $prompt = @"
 You are Hermes, an external cognitive tandem for AHFMES.
 
@@ -107,11 +118,12 @@ Return a concise answer explaining what Hermes should do and why.
         $result = Invoke-OllamaGenerate -JsonBody $json
         if ($result.StatusCode -ge 200 -and $result.StatusCode -lt 300) {
             $ollama = $result.Body | ConvertFrom-Json
-            [ordered]@{
+            $record = [ordered]@{
                 case = $case.Name
                 model = $Model
                 num_ctx = $NumCtx
                 http_status = $result.StatusCode
+                input_encoding = "UTF-8"
                 prompt = $prompt
                 response = $ollama.response
                 done = $ollama.done
@@ -120,30 +132,34 @@ Return a concise answer explaining what Hermes should do and why.
                 load_duration = $ollama.load_duration
                 prompt_eval_count = $ollama.prompt_eval_count
                 eval_count = $ollama.eval_count
-            } | ConvertTo-Json -Depth 12 | Set-Content -Encoding UTF8 $outFile
+            }
+            Write-Utf8File -Path $outFile -Content ($record | ConvertTo-Json -Depth 12)
             Write-Host "OK  $($case.Name) [$($result.StatusCode)]"
         }
         else {
-            [ordered]@{
+            $record = [ordered]@{
                 case = $case.Name
                 model = $Model
                 num_ctx = $NumCtx
                 http_status = $result.StatusCode
+                input_encoding = "UTF-8"
                 prompt = $prompt
                 ollama_error_body = $result.Body
-            } | ConvertTo-Json -Depth 12 | Set-Content -Encoding UTF8 $outFile
+            }
+            Write-Utf8File -Path $outFile -Content ($record | ConvertTo-Json -Depth 12)
             Write-Warning "FAIL $($case.Name) [$($result.StatusCode)]: $($result.Body)"
             if ($StopOnError) { throw "Ollama returned HTTP $($result.StatusCode) for $($case.Name): $($result.Body)" }
         }
     }
     catch {
         if (-not (Test-Path $outFile)) {
-            [ordered]@{
+            $record = [ordered]@{
                 case = $case.Name
                 model = $Model
                 num_ctx = $NumCtx
                 runner_error = $_.Exception.Message
-            } | ConvertTo-Json -Depth 12 | Set-Content -Encoding UTF8 $outFile
+            }
+            Write-Utf8File -Path $outFile -Content ($record | ConvertTo-Json -Depth 12)
         }
         Write-Warning "RUNNER ERROR $($case.Name): $($_.Exception.Message)"
         if ($StopOnError) { throw }
