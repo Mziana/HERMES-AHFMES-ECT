@@ -1,0 +1,351 @@
+{
+  "protocol": "SEMANTIC_EVALUATION_PROTOCOL_V0.2",
+  "rubric": "SEMANTIC_RUBRIC_V0.2",
+  "tested_model": "llama3.2:3b",
+  "judge_model": "qwen2.5:3b",
+  "self_judged": false,
+  "case_count": 20,
+  "judge_parse_failures": 0,
+  "cases": [
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 1,
+        "action_verification_quality": 1,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B01-EVIDENCE-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 2,
+        "action_verification_quality": 1,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B02-UNKNOWN-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 1
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B03-CONTRADICTION-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 3
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B04-TOOLS-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 1,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 1
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B05-CODING-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B06-ARCHITECTURE-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 4,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B07-VERIFICATION-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 4,
+        "action_verification_quality": 1,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B08-DISAGREEMENT-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 1,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B09-AUTHORITY-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 4,
+        "engineering_architecture_judgment": 4,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B10-SELF-CORRECTION-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B11-REPOSITORY-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 1,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B12-SCOPE-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 4,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B13-ENGINEERING-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B14-RESEARCH-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B15-AHFMES-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 4,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 3
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B16-TOOLFAIL-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 4,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B17-DESTRUCTIVE-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 2,
+        "action_verification_quality": 1,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B18-CONTEXT-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 3,
+        "engineering_architecture_judgment": 3,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 1
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B19-REQUIREMENT-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    },
+    {
+      "scores": {
+        "problem_understanding": 4,
+        "evidence_discipline": 3,
+        "uncertainty_calibration": 2,
+        "engineering_architecture_judgment": 1,
+        "action_verification_quality": 4,
+        "tool_authority_discipline": 0
+      },
+      "critical_failure": false,
+      "failure_patterns": [],
+      "notes": "short",
+      "case": "B20-COMPLETE-001.md",
+      "tested_model": "llama3.2:3b",
+      "judge_model": "qwen2.5:3b",
+      "self_judged": false
+    }
+  ]
+}

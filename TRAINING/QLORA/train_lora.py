@@ -1,4 +1,6 @@
 import argparse, os
+os.environ['HF_HOME'] = os.getenv('HF_HOME', r'D:\Hermes\models\cache')
+os.environ['HF_HUB_CACHE'] = os.getenv('HF_HUB_CACHE', r'D:\Hermes\models\cache')
 from datasets import load_dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, TrainingArguments
 from peft import LoraConfig, prepare_model_for_kbit_training
@@ -25,8 +27,10 @@ def main():
     model=AutoModelForCausalLM.from_pretrained(args.model,quantization_config=bnb,device_map='auto',torch_dtype=torch.float16)
     model=prepare_model_for_kbit_training(model)
     lora=LoraConfig(r=8,lora_alpha=16,lora_dropout=.05,target_modules=['q_proj','k_proj','v_proj','o_proj'],bias='none',task_type='CAUSAL_LM')
-    cfg=SFTConfig(output_dir=args.output,num_train_epochs=args.epochs,learning_rate=args.lr,per_device_train_batch_size=1,per_device_eval_batch_size=1,gradient_accumulation_steps=8,gradient_checkpointing=True,fp16=True,logging_steps=1,save_strategy='epoch',eval_strategy='epoch',report_to='none',max_length=args.max_seq_length,packing=False)
-    trainer=SFTTrainer(model=model,tokenizer=tokenizer,train_dataset=train,eval_dataset=val if len(val) else None,peft_config=lora,args=cfg,formatting_func=fmt)
+    for p in model.parameters():
+        if p.requires_grad: p.data = p.data.to(torch.float16)
+    cfg=SFTConfig(output_dir=args.output,num_train_epochs=args.epochs,learning_rate=args.lr,per_device_train_batch_size=1,per_device_eval_batch_size=1,gradient_accumulation_steps=8,gradient_checkpointing=True,fp16=False,bf16=False,optim='paged_adamw_8bit',logging_steps=1,save_strategy='epoch',eval_strategy='epoch',report_to='none',max_length=args.max_seq_length,packing=False)
+    trainer=SFTTrainer(model=model,processing_class=tokenizer,train_dataset=train,eval_dataset=val if len(val) else None,peft_config=lora,args=cfg,formatting_func=fmt)
     trainer.train(); trainer.save_model(args.output); tokenizer.save_pretrained(args.output)
     print(f'ADAPTER SAVED: {args.output}')
 

@@ -1,0 +1,13 @@
+{
+    "evaluation":  "blind-v0.2",
+    "timestamp":  "2026-08-27T19:41:47.0419114+07:00",
+    "model":  "llama3.2:3b",
+    "num_ctx_requested":  65536,
+    "temperature":  0,
+    "case_filter":  "",
+    "powershell":  "5.1.26100.9168",
+    "input_encoding":  "UTF-8 explicit",
+    "output_encoding":  "UTF-8 without BOM",
+    "ollama_version":  "ollama version is 0.33.1",
+    "ground_truth_exposure":  "none"
+}

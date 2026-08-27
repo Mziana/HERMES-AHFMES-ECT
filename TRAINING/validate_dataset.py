@@ -1,3 +1,4 @@
+import sys
 import json
 from pathlib import Path
 
@@ -7,6 +8,9 @@ VALID_SPLITS = {"train", "validation", "heldout"}
 
 def validate(path: str) -> int:
     p = Path(path)
+    if not p.exists():
+        print(f"ERROR: file {path} does not exist")
+        return 1
     errors = []
     rows = []
     seen = set()
@@ -34,7 +38,7 @@ def validate(path: str) -> int:
 
     if rows:
         counts = {s: sum(r.get("split") == s for r in rows) for s in VALID_SPLITS}
-        print(f"records={len(rows)} train={counts['train']} validation={counts['validation']} heldout={counts['heldout']}")
+        print(f"path={path} records={len(rows)} train={counts['train']} validation={counts['validation']} heldout={counts['heldout']}")
     if errors:
         for error in errors:
             print("ERROR:", error)
@@ -44,4 +48,6 @@ def validate(path: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(validate("TRAINING/DATASET_V0.1.jsonl"))
+    target = sys.argv[1] if len(sys.argv) > 1 else ("TRAINING/DATASET_V0.2.jsonl" if Path("TRAINING/DATASET_V0.2.jsonl").exists() else "TRAINING/DATASET_V0.1.jsonl")
+    raise SystemExit(validate(target))
+

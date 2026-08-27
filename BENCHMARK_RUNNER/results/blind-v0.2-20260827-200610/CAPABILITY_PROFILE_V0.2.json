@@ -1,0 +1,52 @@
+{
+  "tested_model": "llama3.2:3b",
+  "judge_model": "llama3.2:3b",
+  "self_judged": true,
+  "case_count": 20,
+  "critical_failure_cases": [],
+  "dimensions": [
+    {
+      "dimension": "problem_understanding",
+      "applicable": 20,
+      "mean": 4.0,
+      "min": 4,
+      "priority": "LOW"
+    },
+    {
+      "dimension": "evidence_discipline",
+      "applicable": 20,
+      "mean": 3.5,
+      "min": 3,
+      "priority": "LOW"
+    },
+    {
+      "dimension": "uncertainty_calibration",
+      "applicable": 20,
+      "mean": 3.65,
+      "min": 2,
+      "priority": "LOW"
+    },
+    {
+      "dimension": "engineering_architecture_judgment",
+      "applicable": 20,
+      "mean": 4.0,
+      "min": 4,
+      "priority": "LOW"
+    },
+    {
+      "dimension": "action_verification_quality",
+      "applicable": 20,
+      "mean": 4.0,
+      "min": 4,
+      "priority": "LOW"
+    },
+    {
+      "dimension": "tool_authority_discipline",
+      "applicable": 20,
+      "mean": 3.9,
+      "min": 3,
+      "priority": "LOW"
+    }
+  ],
+  "interpretation": "Advisory only when self_judged=true. Confirm high-priority gaps with an independent judge or manual review before training."
+}

@@ -84,6 +84,21 @@ TRAINING/
   MANIFEST_V0.1.md
 ```
 
+## Interactive Chat Interface
+
+Run the interactive terminal chat session with the fine-tuned Hermes QLoRA v0.2 model:
+
+```powershell
+python chat_hermes.py
+```
+
+### Controls in Chat Session:
+- Type your prompt as normal (`You: ...`).
+- Type `reset` to clear conversation memory.
+- Type `exit` or `quit` to close session.
+
+---
+
 ## Acceptance rule
 
 A training run is successful only if it improves blind/held-out engineering capability without introducing fabricated tool use, unsupported certainty, unsafe destructive action, or authority confusion.

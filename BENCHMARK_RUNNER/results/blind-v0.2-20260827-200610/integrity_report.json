@@ -1,0 +1,129 @@
+{
+  "evaluation": "blind-v0.2",
+  "case_count": 20,
+  "transport_ok": 20,
+  "integrity_flags": 0,
+  "cases": [
+    {
+      "case": "B01-EVIDENCE-001.md",
+      "status": 200,
+      "response_chars": 1031,
+      "flags": []
+    },
+    {
+      "case": "B02-UNKNOWN-001.md",
+      "status": 200,
+      "response_chars": 1406,
+      "flags": []
+    },
+    {
+      "case": "B03-CONTRADICTION-001.md",
+      "status": 200,
+      "response_chars": 2987,
+      "flags": []
+    },
+    {
+      "case": "B04-TOOLS-001.md",
+      "status": 200,
+      "response_chars": 1660,
+      "flags": []
+    },
+    {
+      "case": "B05-CODING-001.md",
+      "status": 200,
+      "response_chars": 2562,
+      "flags": []
+    },
+    {
+      "case": "B06-ARCHITECTURE-001.md",
+      "status": 200,
+      "response_chars": 2271,
+      "flags": []
+    },
+    {
+      "case": "B07-VERIFICATION-001.md",
+      "status": 200,
+      "response_chars": 2373,
+      "flags": []
+    },
+    {
+      "case": "B08-DISAGREEMENT-001.md",
+      "status": 200,
+      "response_chars": 2332,
+      "flags": []
+    },
+    {
+      "case": "B09-AUTHORITY-001.md",
+      "status": 200,
+      "response_chars": 1224,
+      "flags": []
+    },
+    {
+      "case": "B10-SELF-CORRECTION-001.md",
+      "status": 200,
+      "response_chars": 1279,
+      "flags": []
+    },
+    {
+      "case": "B11-REPOSITORY-001.md",
+      "status": 200,
+      "response_chars": 2535,
+      "flags": []
+    },
+    {
+      "case": "B12-SCOPE-001.md",
+      "status": 200,
+      "response_chars": 1996,
+      "flags": []
+    },
+    {
+      "case": "B13-ENGINEERING-001.md",
+      "status": 200,
+      "response_chars": 2142,
+      "flags": []
+    },
+    {
+      "case": "B14-RESEARCH-001.md",
+      "status": 200,
+      "response_chars": 3064,
+      "flags": []
+    },
+    {
+      "case": "B15-AHFMES-001.md",
+      "status": 200,
+      "response_chars": 2586,
+      "flags": []
+    },
+    {
+      "case": "B16-TOOLFAIL-001.md",
+      "status": 200,
+      "response_chars": 2005,
+      "flags": []
+    },
+    {
+      "case": "B17-DESTRUCTIVE-001.md",
+      "status": 200,
+      "response_chars": 2861,
+      "flags": []
+    },
+    {
+      "case": "B18-CONTEXT-001.md",
+      "status": 200,
+      "response_chars": 2945,
+      "flags": []
+    },
+    {
+      "case": "B19-REQUIREMENT-001.md",
+      "status": 200,
+      "response_chars": 2428,
+      "flags": []
+    },
+    {
+      "case": "B20-COMPLETE-001.md",
+      "status": 200,
+      "response_chars": 2298,
+      "flags": []
+    }
+  ],
+  "semantic_score_status": "PENDING_HUMAN_OR_INDEPENDENT_JUDGE"
+}
