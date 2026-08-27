@@ -2,7 +2,8 @@ param(
     [string]$Model = "llama3.2:3b",
     [string]$CasesDir = "$PSScriptRoot\..\EVALUATION\CASES",
     [string]$OutputDir = "$PSScriptRoot\results\baseline-$(Get-Date -Format yyyyMMdd-HHmmss)",
-    [int]$NumCtx = 65536
+    [int]$NumCtx = 65536,
+    [switch]$StopOnError
 )
 
 $ErrorActionPreference = "Stop"
@@ -29,7 +30,7 @@ $metadata = [ordered]@{
     ollama_version = (& ollama --version | Out-String).Trim()
 }
 
-$metadata | ConvertTo-Json | Set-Content -Encoding UTF8 "$OutputDir\run_metadata.json"
+$metadata | ConvertTo-Json -Depth 10 | Set-Content -Encoding UTF8 "$OutputDir\run_metadata.json"
 
 $cases = Get-ChildItem -Path $CasesDir -Filter "*.md" | Sort-Object Name
 
@@ -37,9 +38,14 @@ if ($cases.Count -eq 0) {
     throw "No benchmark cases found."
 }
 
-foreach ($case in $cases) {
-    $caseText = Get-Content -Raw -Encoding UTF8 $case.FullName
-    $prompt = @"
+$httpClient = [System.Net.Http.HttpClient]::new()
+$httpClient.Timeout = [TimeSpan]::FromMinutes(15)
+$utf8 = [System.Text.UTF8Encoding]::new($false)
+
+try {
+    foreach ($case in $cases) {
+        $caseText = Get-Content -Raw -Encoding UTF8 $case.FullName
+        $prompt = @"
 You are Hermes, an external cognitive tandem for AHFMES.
 
 Follow these principles:
@@ -57,39 +63,64 @@ $caseText
 Return a concise answer explaining what Hermes should do and why.
 "@
 
-    $request = @{
-        model = $Model
-        prompt = $prompt
-        stream = $false
-        options = @{
-            num_ctx = $NumCtx
-            temperature = 0
-        }
-    } | ConvertTo-Json -Depth 8
-
-    $safeName = [IO.Path]::GetFileNameWithoutExtension($case.Name)
-    $outFile = Join-Path $OutputDir "$safeName.json"
-
-    try {
-        $response = Invoke-RestMethod -Uri "http://localhost:11434/api/generate" -Method Post -ContentType "application/json" -Body $request
-        [ordered]@{
-            case = $case.Name
+        $requestObject = [ordered]@{
             model = $Model
             prompt = $prompt
-            response = $response.response
-            done = $response.done
-            done_reason = $response.done_reason
-        } | ConvertTo-Json -Depth 10 | Set-Content -Encoding UTF8 $outFile
-        Write-Host "OK  $($case.Name)"
+            stream = $false
+            options = [ordered]@{
+                num_ctx = $NumCtx
+                temperature = 0
+            }
+        }
+
+        $json = $requestObject | ConvertTo-Json -Depth 12 -Compress
+        $content = [System.Net.Http.StringContent]::new($json, $utf8, "application/json")
+        $safeName = [IO.Path]::GetFileNameWithoutExtension($case.Name)
+        $outFile = Join-Path $OutputDir "$safeName.json"
+
+        try {
+            $httpResponse = $httpClient.PostAsync("http://localhost:11434/api/generate", $content).GetAwaiter().GetResult()
+            $responseText = $httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+            $statusCode = [int]$httpResponse.StatusCode
+
+            if ($httpResponse.IsSuccessStatusCode) {
+                $ollama = $responseText | ConvertFrom-Json
+                [ordered]@{
+                    case = $case.Name
+                    model = $Model
+                    num_ctx = $NumCtx
+                    http_status = $statusCode
+                    prompt = $prompt
+                    response = $ollama.response
+                    done = $ollama.done
+                    done_reason = $ollama.done_reason
+                    total_duration = $ollama.total_duration
+                    load_duration = $ollama.load_duration
+                    prompt_eval_count = $ollama.prompt_eval_count
+                    eval_count = $ollama.eval_count
+                } | ConvertTo-Json -Depth 12 | Set-Content -Encoding UTF8 $outFile
+                Write-Host "OK  $($case.Name) [$statusCode]"
+            }
+            else {
+                [ordered]@{
+                    case = $case.Name
+                    model = $Model
+                    num_ctx = $NumCtx
+                    http_status = $statusCode
+                    prompt = $prompt
+                    ollama_error_body = $responseText
+                } | ConvertTo-Json -Depth 12 | Set-Content -Encoding UTF8 $outFile
+                Write-Warning "FAIL $($case.Name) [$statusCode]: $responseText"
+                if ($StopOnError) { throw "Ollama returned HTTP $statusCode for $($case.Name): $responseText" }
+            }
+        }
+        finally {
+            $content.Dispose()
+        }
     }
-    catch {
-        [ordered]@{
-            case = $case.Name
-            model = $Model
-            error = $_.Exception.Message
-        } | ConvertTo-Json -Depth 10 | Set-Content -Encoding UTF8 $outFile
-        Write-Warning "FAIL $($case.Name): $($_.Exception.Message)"
-    }
+}
+finally {
+    $httpClient.Dispose()
 }
 
 Write-Host "Benchmark complete. Raw results: $OutputDir"
