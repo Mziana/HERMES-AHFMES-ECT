@@ -156,6 +156,87 @@ Initial experiments must account for the GTX 1050 Ti 4 GB VRAM constraint. LoRA 
 
 ---
 
+## 0006 — Brain and Training Specification Completed
+
+**Date:** 2026-08-27  
+**Status:** ACCEPTED AS DESIGN BASELINE
+
+### Added
+
+The Brain specification was expanded into operational protocols covering:
+
+- evidence;
+- authority;
+- uncertainty;
+- self-correction;
+- engineering;
+- research;
+- reasoning;
+- tools;
+- coding;
+- architecture;
+- adversarial review.
+
+Training architecture was established with dataset schema, taxonomy, curriculum, negative examples, experiment logging, LoRA/QLoRA planning, hardware constraints, and readiness gates.
+
+Evaluation architecture was established with benchmark families, failure modes, and acceptance criteria.
+
+### Principle
+
+Training is not considered ready merely because documentation exists. Environment verification, baseline measurement, dataset validation, and reproducible experiment configuration are mandatory gates.
+
+---
+
+## 0007 — Benchmark v0.1 Created
+
+**Date:** 2026-08-27  
+**Status:** OPEN
+
+### Observation
+
+The first 20 benchmark cases were added under `EVALUATION/CASES/`.
+
+The cases cover:
+
+- evidence separation;
+- missing information;
+- conflicting sources;
+- tool selection;
+- inspect-before-modify coding;
+- architectural state ownership;
+- verification discipline;
+- productive disagreement;
+- authority boundaries;
+- self-correction;
+- stale context;
+- scope control;
+- engineering input integrity;
+- research methodology;
+- AHFMES external review;
+- tool failure recovery;
+- destructive actions;
+- context isolation;
+- requirement ambiguity;
+- integrated agent reasoning.
+
+### Next required evidence
+
+The benchmark now needs to be executed against the local base model. No training claim should be made until baseline results are recorded.
+
+---
+
+## Current State
+
+**DESIGN: READY FOR FIRST EMPIRICAL PHASE**
+
+**BENCHMARK: v0.1 INITIAL CASE SET READY**
+
+**TRAINING: NOT YET EXECUTED**
+
+**NEXT OBJECTIVE:** Execute the benchmark against the actual local Llama 3.2 3B configuration, measure the environment, and use the observed failure distribution to build Dataset v0.1.
+
+---
+
 ## Journal Rule
 
 Do not rewrite history to make decisions appear cleaner than they were. If a decision changes, preserve the earlier entry and create a new entry explaining the change and its evidence.
