@@ -15,7 +15,7 @@ Primary target: NVIDIA GTX 1050 Ti 4 GB.
 
 Use 4-bit NF4 QLoRA, batch size 1, gradient accumulation, checkpointing, FP16, and a conservative sequence length. Do not start with 65,536-token training sequences.
 
-The GTX 1050 Ti is Pascal-class. Current bitsandbytes documentation lists Pascal-class NVIDIA GPUs as supported for NF4/FP4 and 8-bit quantization; exact Windows wheel/CUDA compatibility must be validated locally before training. citeturn0search10turn0search11
+The GTX 1050 Ti is Pascal-class. Current bitsandbytes documentation lists Pascal-class NVIDIA GPUs as supported for NF4/FP4 and 8-bit quantization, but exact Windows wheel/CUDA compatibility must be validated locally before training.
 
 ## Windows setup
 
@@ -40,7 +40,7 @@ Verify bitsandbytes:
 python -c "import bitsandbytes as bnb; print('bitsandbytes=',bnb.__version__)"
 ```
 
-If bitsandbytes fails to load on Windows, stop. Do not begin training. Use the current official installation guidance or compile it for the installed CUDA/toolchain. citeturn0search0turn0search14
+If bitsandbytes fails to load on Windows, stop. Do not begin training. Use the current official installation guidance or compile it for the installed CUDA/toolchain.
 
 ## Prepare split
 
