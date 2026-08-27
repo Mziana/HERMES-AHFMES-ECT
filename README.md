@@ -2,31 +2,23 @@
 
 ## Hermes External Cognitive Tandem
 
-HERMES-AHFMES-ECT is the external cognitive-tandem project for AHFMES. It defines and develops a local LLM-based consultant that operates outside the AHFMES-ARE authority boundary.
+HERMES-AHFMES-ECT is the external cognitive-tandem project for AHFMES. It develops a local LLM-based consultant outside the AHFMES-ARE authority boundary.
+
+## Current phase
+
+**Evaluation v0.2 → training preparation**
+
+Initial model target: **Llama 3.2 3B Q4_K_M via Ollama**.
+
+Runtime target: **65,536-token context**. Training sequence length is intentionally separate and starts at 2,048 tokens for feasibility.
 
 ## Mission
 
-Build a local AI that can function as a disciplined:
+Build a local AI that can function as a disciplined software architect, engineering consultant, coding consultant/local coding agent, systems analyst, research analyst, adversarial reviewer, and external thinking partner for AHFMES-ARE.
 
-- Software Architect
-- Software Engineering Consultant
-- Coding Consultant / local coding agent
-- Systems Analyst
-- Research Analyst
-- Adversarial Reviewer
-- External reviewer and thinking partner for AHFMES-ARE
-
-The objective is **not** to create a second copy of ARE. Hermes should understand ARE deeply enough to analyze, challenge, explain, and collaborate with it while remaining external to its authority system.
-
-## Current model target
-
-Initial local model: **Llama 3.2 3B Q4_K_M via Ollama**.
-
-The current machine constraint includes an NVIDIA GeForce GTX 1050 Ti with 4 GB VRAM. Training and inference decisions must respect that constraint rather than assume datacenter hardware.
+The objective is not to create a second copy of ARE. Hermes should understand ARE deeply enough to analyze, challenge, explain, and collaborate with it while remaining external to its authority system.
 
 ## Boundary with AHFMES-ARE
-
-AHFMES-ARE and Hermes are separate systems.
 
 ```text
 AHFMES-ARE
@@ -34,7 +26,6 @@ AHFMES-ARE
   ├─ internal research / validation
   ├─ authority
   └─ operational state
-          │
           │ controlled information exchange
           ▼
 HERMES
@@ -48,43 +39,53 @@ HERMES
 
 Hermes does not automatically possess ARE authority. Hermes output is not automatically ARE evidence, validation, promotion authority, capital authority, or execution authority.
 
-Conversely, Hermes may be granted local coding tools for its own workspace and may perform coding tasks when explicitly permitted by its operating environment.
+## Evaluation ladder
 
-## Core design principles
+1. V0.1 behavioral baseline — completed.
+2. V0.2 blind cognitive evaluation — runner ready.
+3. V0.3 live tool/repository/coding evaluation — next.
+4. Capability-gap analysis.
+5. Curated training dataset.
+6. Smoke-test fine-tuning.
+7. Full PEFT experiment.
+8. Blind + held-out regression evaluation.
 
-1. **Observe before acting.**
-2. **Evidence before assertion.**
-3. **Distinguish fact, inference, assumption, hypothesis, and unknown.**
-4. **Do not claim tool use or inspection that did not occur.**
-5. **Do not silently resolve contradictory authoritative information.**
-6. **Treat uncertainty explicitly.**
-7. **Prefer minimal, reversible changes.**
-8. **Implementation is not verification.**
-9. **Disagreement is allowed and encouraged when justified.**
-10. **Repository state is live information; model memory is not a substitute for it.**
-11. **ARE governance remains outside Hermes authority.**
-12. **Hermes should be capable of adversarial review rather than becoming an echo chamber.**
+V0.1 has evaluator-expectation exposure and therefore contamination risk. V0.2 removes expected behavior, critical failures, target competencies, and scoring hints from the model-visible prompt.
 
-## Project status
+## Training objective
 
-**PLANNING / DESIGN / DEVELOPMENT**
+Target disciplined engineering behavior:
 
-The project is intentionally not declared complete. The architecture, training strategy, evaluation criteria, tooling, and integration model will evolve through documented decisions and journal entries.
+`evidence → understand → question → reason → plan → act → verify → report`
 
-## Source of truth
+Priority capabilities include repository reasoning, software architecture, engineering trade-offs, coding/debugging, evidence discipline, uncertainty calibration, verification, tool discipline, constructive disagreement, self-correction, scope control, and AHFMES authority boundaries.
 
-- `GRAND_DESIGN.md` — master project design and roadmap.
-- `JOURNAL.md` — chronological project journal.
-- `DECISIONS.md` — durable architectural decisions.
-- `TRAINING_PLAN.md` — training and model-development strategy.
-- `EVALUATION.md` — benchmark and acceptance framework.
+## Training strategy
 
-Detailed subsystem specifications will live under `ARCHITECTURE/`, `BRAIN/`, `TRAINING/`, and `EVALUATION/`.
+Use parameter-efficient LoRA/QLoRA rather than full-parameter fine-tuning. The GTX 1050 Ti 4 GB constraint is a first-class design constraint. Do not assume datacenter hardware. A training smoke test must precede any expensive run.
 
-## Relationship to AHFMES-ARE
+## Repository map
 
-AHFMES-ARE is an evolving project. Hermes must therefore learn the **method of understanding ARE**, not freeze a particular repository snapshot into permanent model truth. Current ARE state should be inspected from the repository and controlled interfaces when needed.
+```text
+EVALUATION/
+  CASES/                 V0.1 cases + evaluator ground truth
+  CASES_V02/             model-visible blind cases
+  V0.2/                  schema and rubric
+  RUBRIC/                evaluation policies
 
-## Long-term objective
+BENCHMARK_RUNNER/
+  run_benchmark.ps1      V0.1 runner
+  run_benchmark_v02.ps1  blind V0.2 runner
+  results/               preserved experiment outputs
 
-Create an external AI tandem capable of entering a technical project, understanding its architecture and constraints, independently analyzing its weaknesses, implementing code when authorized, verifying its work, and communicating disagreement or uncertainty with precision.
+TRAINING/
+  README.md
+  DATASET_SCHEMA_V0.1.md
+  MANIFEST_V0.1.md
+```
+
+## Acceptance rule
+
+A training run is successful only if it improves blind/held-out engineering capability without introducing fabricated tool use, unsupported certainty, unsafe destructive action, or authority confusion.
+
+See `GRAND_DESIGN.md`, `TRAINING_PLAN.md`, `EVALUATION.md`, and `JOURNAL.md` for the project-level design history.
