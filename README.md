@@ -67,35 +67,52 @@ Use parameter-efficient LoRA/QLoRA rather than full-parameter fine-tuning. The G
 ## Repository map
 
 ```text
+STUDIO/
+  backend/               FastAPI server, file scanner, subagents engine, approval gate
+  frontend/              React/Vite Control Center UI, ChatArea, RepoInspector
+
 EVALUATION/
   CASES/                 V0.1 cases + evaluator ground truth
   CASES_V02/             model-visible blind cases
+  CASES_V03/             V0.3 live-tool & filesystem grounding benchmark suite
   V0.2/                  schema and rubric
+  V0.3/                  LIVE_TOOL_EVALUATION_SPEC.md
   RUBRIC/                evaluation policies
 
 BENCHMARK_RUNNER/
   run_benchmark.ps1      V0.1 runner
   run_benchmark_v02.ps1  blind V0.2 runner
+  run_benchmark_v03.py   live-tool V0.3 API benchmark harness
+  run_full_evaluation_gate.ps1  unified regression gate runner
   results/               preserved experiment outputs
 
 TRAINING/
   README.md
   DATASET_SCHEMA_V0.1.md
-  MANIFEST_V0.1.md
+  DATASET_V0.3_PLAN.md
+  DATASET_V0.3_SAMPLE.jsonl
+  validate_dataset.py
 ```
 
-## Interactive Chat Interface
+## Tool Governance & Security Policy
 
-Run the interactive terminal chat session with the fine-tuned Hermes QLoRA v0.2 model:
+1. **Path Containment Enforcement**: All filesystem accesses via `STUDIO/backend/file_scanner.py` use `resolve_safe_path()` to strictly prevent path traversal attacks (`../` escapes).
+2. **Tokenized Approval Gate**: File modification requests (`POST /api/action/execute`) require a valid, unexpired `approval_token` issued by `ActionExecutionSubagent`. Unauthorized calls are rejected with `HTTP 403 Forbidden`.
+3. **Dynamic Physical Evidence**: Subagents compute all metrics (file counts, line counts, manifest member counts) dynamically at runtime from physical disk state.
+
+## Interactive Chat & Control Center
+
+Run Hermes Studio Control Center (Web Interface on `http://localhost:3000` & Backend on `http://localhost:8000`):
+
+```powershell
+.\run_studio.ps1
+```
+
+Or run the interactive terminal chat session:
 
 ```powershell
 python chat_hermes.py
 ```
-
-### Controls in Chat Session:
-- Type your prompt as normal (`You: ...`).
-- Type `reset` to clear conversation memory.
-- Type `exit` or `quit` to close session.
 
 ---
 

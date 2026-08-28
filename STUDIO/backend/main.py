@@ -85,12 +85,18 @@ def delete_session(session_id: str):
 
 @app.get("/api/repo/tree")
 def repo_tree(path: str = ""):
-    return get_repo_tree(path)
+    res = get_repo_tree(path)
+    if "error" in res and "PATH TRAVERSAL DENIED" in res["error"]:
+        raise HTTPException(status_code=403, detail=res["error"])
+    return res
 
 
 @app.get("/api/repo/file")
 def repo_file(path: str):
-    return read_repo_file(path)
+    res = read_repo_file(path)
+    if "error" in res and "PATH TRAVERSAL DENIED" in res["error"]:
+        raise HTTPException(status_code=403, detail=res["error"])
+    return res
 
 
 @app.post("/api/chat/stream")
@@ -163,17 +169,50 @@ async def chat_stream(req: ChatRequest):
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
+from file_scanner import get_repo_tree, read_repo_file, resolve_safe_path
+import subagents
+from subagents import dispatch_subagents
+
+
+class ProposeActionRequest(BaseModel):
+    rel_path: str
+    content: str = ""
+    action: str = "write_file"
+
+
+@app.post("/api/action/propose")
+def propose_file_action(req: ProposeActionRequest):
+    """Issues a capability-bound approval token registered in backend memory for specific path and action."""
+    token = subagents.issue_approval_token(rel_path=req.rel_path, action=req.action, content=req.content)
+    return {
+        "approval_token": token,
+        "rel_path": req.rel_path,
+        "status": "AWAITING_APPROVAL"
+    }
+
+
 class ExecuteActionRequest(BaseModel):
+    approval_token: str
     rel_path: str
     content: str
 
 
 @app.post("/api/action/execute")
 def execute_file_action(req: ExecuteActionRequest):
-    """Physically writes / updates code file in D:\\Hermes\\AHFMES-ARE upon explicit user approval."""
-    target_path = os.path.join(r"D:\Hermes\AHFMES-ARE", req.rel_path)
+    """Physically writes / updates code file ONLY upon presenting a valid, unexpired approval token."""
+    # 1. Enforce Approval Token Authorization Gate
+    is_valid, auth_msg = subagents.consume_approval_token(req.approval_token, req.rel_path)
+    if not is_valid:
+        raise HTTPException(status_code=403, detail=auth_msg)
+
+    # 2. Enforce Path Traversal Containment Policy
     try:
-        os.makedirs(os.path.dirname(target_path), exist_ok=True)
+        target_path, repo_root = resolve_safe_path(req.rel_path)
+    except PermissionError as pe:
+        raise HTTPException(status_code=403, detail=str(pe))
+
+    try:
+        os.makedirs(target_path.parent, exist_ok=True)
         with open(target_path, "w", encoding="utf-8") as f:
             f.write(req.content)
         
@@ -183,7 +222,7 @@ def execute_file_action(req: ExecuteActionRequest):
 
         return {
             "status": "SUCCESS",
-            "message": f"Successfully updated {req.rel_path}",
+            "message": f"Successfully updated {req.rel_path} with valid Token",
             "pytest_result": pytest_res['evidence']
         }
     except Exception as e:
