@@ -18,10 +18,10 @@ from subagents import dispatch_subagents
 
 app = FastAPI(title="Hermes Studio Backend API")
 
-# Enable CORS for React frontend (localhost:3000)
+# Enable CORS for React frontend (localhost:3000 & localhost:5173)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -109,15 +109,22 @@ async def chat_stream(req: ChatRequest):
     evidence_text = ""
     for sa in subagent_evidence:
         evidence_text += sa['evidence'] + "\n"
+        database.log_subagent_execution(
+            session_id=req.session_id,
+            agent_name=sa.get('agent', 'Unknown'),
+            action=sa.get('action', 'inspect'),
+            evidence=sa.get('evidence', '')
+        )
 
-    # Fetch previous messages for context memory
+    # Fetch previous messages for context memory (capped to last 10 messages to prevent 3B repeating loop)
     history = database.get_messages(req.session_id)
+    history_window = history[-11:-1] if len(history) > 11 else history[:-1]
     
     ollama_messages = [
         {"role": "system", "content": SYSTEM_PROMPTS.get(req.mode, SYSTEM_PROMPTS["architect"])}
     ]
 
-    for msg in history[:-1]:  # Exclude last user msg to avoid duplicate
+    for msg in history_window:
         ollama_messages.append({"role": msg['role'], "content": msg['content']})
 
     # If physical subagent evidence was discovered, inject evidence cleanly into prompt

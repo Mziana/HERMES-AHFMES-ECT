@@ -30,10 +30,14 @@ if (-not $SkipV02) {
 if (-not $SkipV03) {
     Write-Host "`n[STEP 3/3] Running V0.3 Live-Tool Benchmark Suite..." -ForegroundColor Yellow
     python "$ScriptDir\run_benchmark_v03.py"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "`n[ERROR] V0.3 Live-Tool Benchmark Gate Failed! Exit code: $LASTEXITCODE" -ForegroundColor Red
+        exit $LASTEXITCODE
+    }
 } else {
     Write-Host "`n[STEP 3/3] Skipped V0.3 Live-Tool Benchmark (-SkipV03 flag set)" -ForegroundColor Gray
 }
 
 Write-Host "`n============================================================" -ForegroundColor Green
-Write-Host "  EVALUATION GATE COMPLETE: System Ready for Audit Review" -ForegroundColor Green
+Write-Host "  EVALUATION GATE COMPLETE: System Passed All Gates" -ForegroundColor Green
 Write-Host "============================================================" -ForegroundColor Green

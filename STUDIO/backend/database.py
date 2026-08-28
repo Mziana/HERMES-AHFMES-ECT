@@ -1,7 +1,7 @@
 """
 SQLite Local Persistence Manager for Hermes Studio
-Database file stored in D:\\Hermes\\HERMES-AHFMES-ECT\\storage\\hermes_studio.db
-Survives system reboots, restarts, and OS reinstalls (stored in Drive D).
+Database file path configurable via HERMES_DB_PATH.
+Enforces WAL journal mode, Foreign Key constraints, and Subagent Audit Logging.
 """
 
 import os
@@ -10,13 +10,17 @@ import json
 import uuid
 from datetime import datetime
 
-DB_PATH = r"D:\Hermes\HERMES-AHFMES-ECT\storage\hermes_studio.db"
+DEFAULT_DB_PATH = os.path.join(os.path.dirname(__file__), "..", "storage", "hermes_studio.db")
+DB_PATH = os.getenv("HERMES_DB_PATH", r"D:\Hermes\HERMES-AHFMES-ECT\storage\hermes_studio.db")
 
 
 def get_db():
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    # Enable WAL mode and foreign key constraints
+    conn.execute("PRAGMA journal_mode = WAL;")
+    conn.execute("PRAGMA foreign_keys = ON;")
     return conn
 
 
@@ -109,6 +113,19 @@ def add_message(session_id, role, content, metadata=None):
     conn.commit()
     conn.close()
     return {"id": msg_id, "session_id": session_id, "role": role, "content": content}
+
+
+def log_subagent_execution(session_id, agent_name, action, evidence):
+    """Persists subagent audit execution log into subagent_logs table."""
+    conn = get_db()
+    cursor = conn.cursor()
+    log_id = str(uuid.uuid4())
+    cursor.execute(
+        "INSERT INTO subagent_logs (id, session_id, agent_name, action, evidence) VALUES (?, ?, ?, ?, ?)",
+        (log_id, session_id, agent_name, action, evidence)
+    )
+    conn.commit()
+    conn.close()
 
 
 def delete_session(session_id):

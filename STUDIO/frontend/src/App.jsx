@@ -105,18 +105,21 @@ export default function App() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let accumulatedText = '';
+      let buffer = '';
 
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
         
-        const chunkStr = decoder.decode(value, { stream: true });
-        const lines = chunkStr.split('\n\n');
+        buffer += decoder.decode(value, { stream: true });
+        const events = buffer.split('\n\n');
+        buffer = events.pop(); // keep last potentially incomplete fragment in buffer
 
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
+        for (const evtBlock of events) {
+          const trimmed = evtBlock.trim();
+          if (trimmed.startsWith('data: ')) {
             try {
-              const data = JSON.parse(line.replace('data: ', ''));
+              const data = JSON.parse(trimmed.substring(6));
               if (data.type === 'token') {
                 accumulatedText += data.content;
                 setStreamingText(accumulatedText);
@@ -127,7 +130,7 @@ export default function App() {
                 fetchSessions();
               }
             } catch (e) {
-              // Ignore partial JSON chunks
+              // Ignore invalid lines
             }
           }
         }

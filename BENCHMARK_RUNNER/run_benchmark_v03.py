@@ -142,15 +142,15 @@ def run_benchmark():
         sys.exit(1)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    session_id = create_session()
-    print(f"Created Test Session: {session_id}", flush=True)
     print(f"Output Directory: {OUTPUT_DIR}\n", flush=True)
 
     summary = []
     total_passed = 0
 
     for test in BENCHMARK_SUITE:
-        print(f"--> Running {test['id']}: {test['name']}...", flush=True)
+        # Create fresh isolated session per test case to avoid history contamination
+        session_id = create_session()
+        print(f"--> Running {test['id']}: {test['name']} (Isolated Session: {session_id[:8]}...)...", flush=True)
         start_t = time.time()
         subagents, full_text = send_chat_stream(session_id, test["prompt"])
         duration = round(time.time() - start_t, 2)
@@ -177,13 +177,14 @@ def run_benchmark():
 
     # Save summary report
     report_file = os.path.join(OUTPUT_DIR, "v0.3_benchmark_summary.json")
+    gate_passed = (total_passed == len(BENCHMARK_SUITE))
     with open(report_file, "w", encoding="utf-8") as f:
         json.dump({
             "timestamp": datetime.now().isoformat(),
             "total_cases": len(BENCHMARK_SUITE),
             "passed": total_passed,
             "score_pct": round((total_passed / len(BENCHMARK_SUITE)) * 100, 1),
-            "gate_status": "PASSED" if total_passed == len(BENCHMARK_SUITE) else "BLOCKED",
+            "gate_status": "PASSED" if gate_passed else "BLOCKED",
             "cases": summary
         }, f, indent=2)
 
@@ -191,6 +192,13 @@ def run_benchmark():
     print(f"BENCHMARK COMPLETED: {total_passed}/{len(BENCHMARK_SUITE)} PASSED ({round((total_passed/len(BENCHMARK_SUITE))*100, 1)}%)", flush=True)
     print(f"Detailed Report: {report_file}", flush=True)
     print("=" * 60, flush=True)
+
+    if not gate_passed:
+        print(">>> V0.3 EVALUATION GATE BLOCKED! EXITING WITH CODE 1. <<<", flush=True)
+        sys.exit(1)
+    else:
+        print(">>> V0.3 EVALUATION GATE PASSED! EXITING WITH CODE 0. <<<", flush=True)
+        sys.exit(0)
 
 
 if __name__ == "__main__":
