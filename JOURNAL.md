@@ -347,9 +347,51 @@ Run post-training evaluation using heldout evaluation splits and blind v0.2 benc
 
 ---
 
+## 0012 — Forensic Audit, Provenance Manifest & Epistemic Boundary Enforcement
+
+**Date:** 2026-08-28  
+**Status:** ACCEPTED / RECONCILIATION COMPLETE
+
+### Observation
+
+1. **Repository Hygiene & `.gitignore`:**
+   - Created `.gitignore` ignoring `__pycache__/`, `*.pyc`, scratch Modelfiles (`Modelfile_*`), and raw binary checkpoint dumps (`checkpoint-*/`).
+   - Cleaned up temporary scratch Modelfiles from root directory.
+2. **State Reconciliation & Documentation Contract:**
+   - Reconciled `README.md` status header from `Evaluation v0.2 → training preparation` to `Hermes v0.2 Trained & Evaluated (Pilot/PoC Phase) → V0.3 Live-Tool Evaluation Gate`.
+   - Canonicalized base model identity across all project documentation to **`unsloth/Llama-3.2-3B-Instruct`**.
+3. **Provenance Manifest Created (`PROJECT_PROVENANCE.md`):**
+   - Single source of truth created mapping base model, dataset v0.2 splits, QLoRA run parameters, adapter outputs (8.78 MB), and Ollama model tags (`hermes-v0.2`).
+4. **Evaluation Claim Qualification:**
+   - Updated `POST_TRAINING_EVALUATION_REPORT.md` status from `ACCEPTED/VERIFIED` to **`PILOT / PROOF-OF-CONCEPT EVALUATED`**.
+   - Qualified that SFT loss reduction (`3.665` -> `2.858`) and token accuracy gains (`45.69%`) demonstrate pilot behavioral adaptation, but do NOT constitute proof of zero-hallucination or un-tooled filesystem inspection.
+5. **Epistemic Boundary Contract & V0.3 Gate Defined (`LIVE_TOOL_EVALUATION_SPEC.md`):**
+   - Enforced the invariant:
+     $$\text{Model Hypothesis} \longrightarrow \text{Tool Inspection} \longrightarrow \text{Observed Evidence} \longrightarrow \text{Verification} \longrightarrow \text{Qualified Conclusion}$$
+   - Established the V0.3 Live-Tool Gate as the mandatory requirement before any production claims or future retraining iterations.
+
+---
+
+## Current State
+
+**DESIGN: COMPLETE & VERIFIED**
+
+**PROVENANCE MANIFEST: CREATED (`PROJECT_PROVENANCE.md`)**
+
+**REPOSITORY HYGIENE: `.gitignore` ENFORCED & SCRATCH CLEANED**
+
+**DOCUMENTATION DRIFT: RECONCILED (`README.md`, `EVALUATION.md`, `TRAINING_PLAN.md`)**
+
+**EVALUATION CLAIM: QUALIFIED (`PILOT / PROOF-OF-CONCEPT EVALUATED`)**
+
+**EPISTEMIC BOUNDARY: ENFORCED (V0.3 Live-Tool Gate Specified)**
+
+---
+
 ## Journal Rule
 
 Do not rewrite history to make decisions appear cleaner than they were. If a decision changes, preserve the earlier entry and create a new entry explaining the change and its evidence.
+
 
 
 

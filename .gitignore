@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch & Training Checkpoints / Binary dumps
+checkpoint-*/
+*.pt
+*.pth
+*.bin
+!training_args.bin
+
+# Temporary scratch Modelfiles & test artifacts
+Modelfile_*
+*.tmp
+*.log
+
+# Environment & Virtual environments
+.env
+.venv
+venv/
+ENV/
+node_modules/
+*.db
+
+# IDE / OS Cache
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -2,7 +2,7 @@
 
 ## Objective
 
-Adapt a local Llama 3.2 3B model into a disciplined external architecture and engineering consultant without freezing AHFMES-ARE's evolving repository state into model weights.
+Adapt local canonical base model **`unsloth/Llama-3.2-3B-Instruct`** into a disciplined external architecture and engineering consultant without freezing AHFMES-ARE's evolving repository state into model weights.
 
 ## Training order
 

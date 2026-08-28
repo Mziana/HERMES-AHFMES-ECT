@@ -22,18 +22,24 @@ def validate(path: str) -> int:
         except json.JSONDecodeError as exc:
             errors.append(f"line {n}: invalid JSON: {exc}")
             continue
-        missing = REQUIRED - row.keys()
-        if missing:
-            errors.append(f"line {n}: missing fields {sorted(missing)}")
+        # V0.3 conversation trajectory format support
+        if "conversations" in row:
+            if not isinstance(row.get("conversations"), list) or len(row.get("conversations")) < 2:
+                errors.append(f"line {n}: conversations must be a list with at least system/user/assistant entries")
+        else:
+            missing = REQUIRED - row.keys()
+            if missing:
+                errors.append(f"line {n}: missing fields {sorted(missing)}")
+            if row.get("split") not in VALID_SPLITS:
+                errors.append(f"line {n}: invalid split {row.get('split')}")
+            if not isinstance(row.get("competencies"), list) or not row.get("competencies"):
+                errors.append(f"line {n}: competencies must be a non-empty list")
+            if not isinstance(row.get("response"), str) or not row.get("response", "").strip():
+                errors.append(f"line {n}: empty response")
+
         if row.get("id") in seen:
             errors.append(f"line {n}: duplicate id {row.get('id')}")
         seen.add(row.get("id"))
-        if row.get("split") not in VALID_SPLITS:
-            errors.append(f"line {n}: invalid split {row.get('split')}")
-        if not isinstance(row.get("competencies"), list) or not row.get("competencies"):
-            errors.append(f"line {n}: competencies must be a non-empty list")
-        if not isinstance(row.get("response"), str) or not row.get("response", "").strip():
-            errors.append(f"line {n}: empty response")
         rows.append(row)
 
     if rows:

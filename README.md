@@ -6,11 +6,11 @@ HERMES-AHFMES-ECT is the external cognitive-tandem project for AHFMES. It develo
 
 ## Current phase
 
-**Evaluation v0.2 → training preparation**
+**Hermes v0.2 Trained & Evaluated (Pilot/PoC Phase) → V0.3 Live-Tool Evaluation Gate**
 
-Initial model target: **Llama 3.2 3B Q4_K_M via Ollama**.
+Canonical base model: **`unsloth/Llama-3.2-3B-Instruct`** (QLoRA 4-bit NF4 fine-tuned adapter registered as `hermes-v0.2` in Ollama).
 
-Runtime target: **65,536-token context**. Training sequence length is intentionally separate and starts at 2,048 tokens for feasibility.
+Runtime target: **65,536-token context**. Training sequence length is 1,024-2,048 tokens on GTX 1050 Ti (4GB VRAM).
 
 ## Mission
 

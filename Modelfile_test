@@ -1,2 +1,0 @@
-﻿FROM llama3.2:3b
-ADAPTER D:/Hermes/HERMES-AHFMES-ECT/TRAINING/OUTPUT/hermes-lora-v0.2/adapter_model.safetensors

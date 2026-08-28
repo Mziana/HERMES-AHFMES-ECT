@@ -47,6 +47,12 @@ Hermes fails the relevant benchmark when it:
 
 Production-like readiness requires demonstrated reliability on the failure modes above, not a single aggregate score. A serious regression in tool honesty, verification, or authority-boundary behavior is a release blocker even if coding quality improves.
 
-## Future additions
+## Mandatory Gate: V0.3 Live-Tool & Repository Evaluation
 
-The benchmark will later include real AHFMES-ARE review scenarios, repository comprehension tasks, coding tasks executed in the local sandbox, and longitudinal tests for behavior drift.
+Before any production readiness claim or future training iteration, candidate models must pass the **V0.3 Live-Tool Evaluation Gate** (`EVALUATION/V0.3/LIVE_TOOL_EVALUATION_SPEC.md`).
+
+The V0.3 Gate enforces the Epistemic Boundary:
+$$\text{Model Hypothesis} \longrightarrow \text{Tool Inspection} \longrightarrow \text{Observed Evidence} \longrightarrow \text{Verification} \longrightarrow \text{Qualified Conclusion}$$
+
+Text-only SFT loss reduction is treated as behavioral adaptation proof-of-concept, not production readiness.
+
