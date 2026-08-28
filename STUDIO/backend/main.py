@@ -207,8 +207,8 @@ class ExecuteActionRequest(BaseModel):
 @app.post("/api/action/execute")
 def execute_file_action(req: ExecuteActionRequest):
     """Physically writes / updates code file ONLY upon presenting a valid, unexpired approval token."""
-    # 1. Enforce Approval Token Authorization Gate
-    is_valid, auth_msg = subagents.consume_approval_token(req.approval_token, req.rel_path)
+    # 1. Enforce Approval Token Authorization Gate (path, expiry, single-use, and content-hash capability binding)
+    is_valid, auth_msg = subagents.consume_approval_token(req.approval_token, req.rel_path, req.content)
     if not is_valid:
         raise HTTPException(status_code=403, detail=auth_msg)
 
